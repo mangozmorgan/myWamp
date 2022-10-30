@@ -18,7 +18,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.10.2/dist/cdn.min.js"></script>
-    <script defer src="<?=BOX_ICON?>"></script>
+    <script defer src="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"></script>
     <script defer src="<?=FONT_AWESOME?>"></script>
 <!--    <script src="https://kit.fontawesome.com/711da2a695.js" crossorigin="anonymous"></script>-->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
