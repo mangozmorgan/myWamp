@@ -1,10 +1,10 @@
 # MyWamp
 Simple custom interface for winamp
 ## How to install ?
-- Download the directory myWamp from github 
+- 
 - Find your **www** directory , where your is your localhost , for example mine is C:\wamp64\www
-- Find the **index.php** file and rename it to **indexNormal.php**
-- Copy the **myWamp** directory to this directory ( **www** )
+- Cloning the repository myWamp from github ( "https://github.com/mangozmorgan/myWamp.git" ) here 
+- Find the **index.php** file in **www** and rename it to **indexNormal.php**
 - Open **myWamp** directory and cut **index.php** paste it to **www**
 ## How configure ? 
 - Go to **myWamp/php/myInfos.php**
