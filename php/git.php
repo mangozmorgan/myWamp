@@ -1,13 +1,7 @@
 <?php
-$path = '../../Login_register';
-chdir($path);
-$your_command = `git status --pretty=%h`;
-//exec("git add .");
-//$res = exec("git status'");
-exec("whoami");
-exec($your_command.' 2>&1', $output, $return_var);
-//var_dump($output);
-nicePrint($return_var);
-nicePrint($your_command);
+include_once './GitController.php';
 
-echo "<h3 align = center> Succesfully commited all the files.</h3>";
+$git = new GitController();
+
+//$repoCreated = $git->createRepository('MonRepoO0','test repos via php');
+//$repoCreated = $git->removeRepository('MonRepoO0');

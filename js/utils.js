@@ -36,7 +36,21 @@ let openExplorer =async (path) =>{
 let openGit = (uri) =>{
     window.location.href = uri
 }
-let remove = (nameDirectory) =>{
+let remove = (nameDirectory, asGitRepository) =>{
+
+    // console.log(element)
+    let gitText = ''
+    let gitButton = false
+    let gitSuccessText = "This project is removed successfully"
+
+    console.log(asGitRepository)
+
+    if ( asGitRepository == 1 ){
+        gitText = 'By the way you can also remove the repository GitHub linked to this project'
+        gitButton = true
+        gitSuccessText = "This project and your repository in Github are removed successfully"
+
+    }
 
     let colorBG = 'white'
     let textColor = 'black'
@@ -46,23 +60,43 @@ let remove = (nameDirectory) =>{
     }
     Swal.fire({
         icon : 'warning',
+        width:'40%',
         background : colorBG ,
         title:`<h5 style='color:${textColor}'>Remove a project</h5>`,
-        html: `<div class="swal2-html-container " id="swal2-html-container" style="display: block;color: ${textColor}" >Do you want to remove this project ? Think carefully because the deletion is permanent !</div> `,
+        html: `<div class="swal2-html-container " id="swal2-html-container" style="display: block;color: ${textColor}" >Do you want to remove this project ? Think carefully because the deletion is permanent ! ${gitText}</div> `,
         showCancelButton : true,
+        confirmButtonColor :'blue',
+        confirmButtonText : 'Remove my project',
         CancelButtonText : 'cancel',
+        showDenyButton: gitButton,
+        denyButtonText: `Remove my project and my Git repository`,
+        denyButtonColor: `#9334EA`,
+
         customClass: {
             title: '' //insert class here
         }
 
     }).then(async (res) =>{
 
+        if( res.isDenied ){
+            let formattedData = new FormData;
+            formattedData.append('directory',nameDirectory)
+
+            const response = await fetch('./myWamp/php/removeGitRepository.php', {
+                method: 'POST',
+                body: formattedData
+            })
+            res.isConfirmed = true
+
+        }
+
         if ( res.isConfirmed){
 
             let formattedData = new FormData;
             formattedData.append('directory',nameDirectory)
+            formattedData.append('asGit',asGitRepository)
 
-            const response = await fetch('./myWamp/removeProject.php', {
+            const response = await fetch('./myWamp/php/removeProject.php', {
                 method: 'POST',
                 body: formattedData
             })
@@ -73,7 +107,7 @@ let remove = (nameDirectory) =>{
                     icon:'success',
                     background : colorBG ,
                     title:`<h5 style='color:${textColor}'>Remove a project</h5>`,
-                    html: `<div class="swal2-html-container " id="swal2-html-container" style="display: block;color: ${textColor}" >This project is removed with success</div> `,
+                    html: `<div class="swal2-html-container " id="swal2-html-container" style="display: block;color: ${textColor}" >${gitSuccessText} !</div> `,
                 }).then(function(){
                     location.reload()
                 })
@@ -92,6 +126,10 @@ let remove = (nameDirectory) =>{
         }
 
     })
+}
+
+let createRepository = () =>{
+
 }
 
 let goDark = () => {
@@ -120,6 +158,17 @@ let goNormal = () => {
         element.classList.add('shadow')
         element.classList.remove('border')
         element.classList.remove('border-slate-500')
+    })
+}
+
+let createDirectory = () => {
+    Swal.fire({
+        title:'Create a new project'
+    })
+}
+let createDirectoryAndRepo = () => {
+    Swal.fire({
+        title:'Create a new project and a Git repository'
     })
 }
 
