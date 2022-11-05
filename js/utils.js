@@ -1,6 +1,31 @@
-// window.addEventListener('load', (event) => {
-//     document.querySelector('#default-toggle').click()
-// });
+
+
+// document.querySelector('#container').scrollTop = 520;
+
+
+
+async function openGitInfo(){
+
+    if ( document.querySelector('#modalGit').classList.contains('hidden')){
+
+        const response = await fetch('./myWamp/php/getUserGitInfos.php', {
+            method: 'GET'
+        })
+            .then(response => response.text())
+        let infosDecoded = JSON.parse(response)
+
+        document.querySelector('#publicRepo').innerHTML = "Publics repos : "+ infosDecoded.public_repos
+        document.querySelector('#privateRepo').innerHTML = "Privates repos : "+ infosDecoded.total_private_repos
+        document.querySelector('#avatarGit').src = infosDecoded.avatar_url
+
+    }
+
+    document.querySelector('#modalGit').classList.toggle('hidden')
+
+
+}
+
+
 
 
 let triProjet = (value) =>{
@@ -109,7 +134,7 @@ let remove = (nameDirectory, asGitRepository) =>{
                     title:`<h5 style='color:${textColor}'>Remove a project</h5>`,
                     html: `<div class="swal2-html-container " id="swal2-html-container" style="display: block;color: ${textColor}" >${gitSuccessText} !</div> `,
                 }).then(function(){
-                    location.reload()
+                    window.location.reload(true);
                 })
             }else{
                 Swal.fire({
@@ -118,20 +143,17 @@ let remove = (nameDirectory, asGitRepository) =>{
                     title:`<h5 style='color:${textColor}'>Remove a project</h5>`,
                     html: `<div class="swal2-html-container " id="swal2-html-container" style="display: block;color: ${textColor}" >Error during the supression of the project</div> `,
                 }).then(function(){
-                    location.reload()
+                    window.location.reload(true);
                 })
             }
 
-            // window.location.reload()
         }
 
     })
 }
 
-let createRepository = () =>{
-
-}
-
+//DOC : THEMES
+//////////////////////////////////////////////////
 let goDark = () => {
     document.querySelectorAll('.themeBG').forEach(element =>{
         element.classList.add('bg-slate-800')
@@ -161,16 +183,91 @@ let goNormal = () => {
     })
 }
 
-let createDirectory = () => {
+//////////////////////////////////////////////////////
+
+let createProject = (git) => {
+
+    let elementVisibility = ''
+    let title ="Create a new project"
+    let messSuccess = 'is created successfully !'
+
+
+    if ( git === true ){
+        elementVisibility = '<div class="flex flex-col items-center rounded-lg "><label>Visibility</label><select class="border-2 border-gray-300 w-1/3 h-10 px-5 pr-16 rounded-lg text-sm m-2 themeBG themeTEXT themeBORDER" id="selectVisibility"><option value="public" selected>Public</option><option value="private">Private</option></select></div>'
+
+        title = "Create a new project and GitHub repository<i  class=' fa-brands fa-github cursor-pointer ml-2 toWhite'></i>"
+
+        messSuccess = 'and the GitHub repository are created successfully !'
+    }
+
+    let nameProject = ''
+
     Swal.fire({
-        title:'Create a new project'
+        title:title,
+        html:
+            '<div class="mb-2">A directory will be created in your localhost folder</div> <input id="nameOfProject" placeholder="A name for your project" class="border-2 border-gray-300 h-10 px-5 pr-16 rounded-lg text-sm m-2 themeBG themeTEXT themeBORDER">'+elementVisibility+'<textarea id="description" rows="4" class="block p-2.5 w-full text-sm rounded-lg border border-gray-300" placeholder="Your message..."></textarea>',
+        showCancelButton: true,
+        confirmButtonText: 'Create a new project',
+        showLoaderOnConfirm: true,
+        preConfirm: async function () {
+
+            nameProject = document.querySelector('#nameOfProject').value
+            let nameOfProject = document.querySelector('#nameOfProject').value
+            let description = document.querySelector('#description').value
+            let formattedData = new FormData
+            formattedData.append('directoryName',nameOfProject)
+            formattedData.append('description',description)
+            formattedData.append('git',git)
+
+            if ( git === true ){
+                let visibility = document.querySelector('#selectVisibility').value
+                formattedData.append('visibility',visibility)
+            }
+            const response = await fetch('./myWamp/php/createProject.php', {
+                method: 'POST',
+                body: formattedData
+            }).then(response =>response.text())
+            let resDecoded = JSON.parse(response)
+
+            console.log(typeof Object.keys(resDecoded)[0] )
+            console.log(Object.keys(resDecoded)[0].toString() === 'error')
+                if ( Object.keys(resDecoded)[0].toString() === 'error'){
+                    Swal.fire({
+                        icon:'error',
+                        title:'Create a new project',
+                        text : resDecoded.error,
+
+                    }).then(function(){
+                        return false;
+                    })
+                }else{
+                    if( git === true ){
+                        const res =  fetch('./myWamp/php/cloneRepo.php', {
+                            method: 'POST',
+                            body: formattedData
+                        })
+                    }
+                    Swal.fire({
+                        icon:'success',
+                        title:title,
+                        text : "The project "+nameProject+" "+messSuccess,
+
+                    }).then(function(){
+
+                        window.location.reload(true);
+                        return false;
+                    })
+
+                }
+
+            return true
+
+
+        },
+        allowOutsideClick: false
     })
 }
-let createDirectoryAndRepo = () => {
-    Swal.fire({
-        title:'Create a new project and a Git repository'
-    })
-}
+
 
 document.querySelector('#default-toggle').addEventListener('click',(e)=>{
     let formData = new FormData
