@@ -26,10 +26,10 @@ Work in progress... .. .
 ![Screenshot](assets/Screenshot_original.png)
 
 ### myWamp & Original theme
-![Screenshot](assets/ScreenShot_1.png)
+![Screenshot](assets/1.png)
 
 ### myWamp & White theme
-![Screenshot](assets/ScreenShot_white.png)
+![Screenshot](assets/2.png)
 
 ### New feature v1.2 💚
 
