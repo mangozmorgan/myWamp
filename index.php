@@ -61,7 +61,7 @@ include_once './myWamp/php/utils.php';
 <body class="themeBG ">
 <nav style="position: fixed;top: 0;" class="flex justify-between w-full px-10 py-4 items-center shadow bg-white sticky-bottom bg-white themeBG themeTEXT themeBORDER relative z-20">
     <div class="flex">
-        <img class="mr-2" style="width: 2rem;m" src="./favicon.ico">
+        <img class="mr-2" style="width: 2rem;m" src="./myWamp/assets/favicon.ico">
         <h1 class="text-xl text-gray-800 font-bold themeTEXT">MyWamp</h1>
 
     </div>

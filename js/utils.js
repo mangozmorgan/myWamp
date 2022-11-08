@@ -1,10 +1,53 @@
 
+async function  getCommitBehindOrigin(repo,htmlElement){
+
+
+    let formattedData = new FormData
+    formattedData.append('repo',repo)
+    const response = await fetch('./myWamp/php/getCommitBehindFromOrigin.php', {
+        method: 'POST',
+        body: formattedData
+    }).then(response => response.text())
+    let decodedData = JSON.parse(response)
+
+    htmlElement.parentElement.nextElementSibling.innerHTML += `<p title="Number commits may be commit" class="font-bold mr-2" ><i class="fa-solid mr-1 text-green-400  cursor-pointer fa-arrow-up "></i>${decodedData.ahead}</p>`
+    htmlElement.parentElement.nextElementSibling.innerHTML += `<p title="Your difference with online repository" class="font-bold mr-2 col-end-7" ><i class="fa-solid cursor-pointer mr-1 text-red-400 fa-arrow-down"></i>${decodedData.behind}</p>`
+}
+
+async function  getRepoLocalStatus(repo,htmlElement){
+
+
+    let formattedData = new FormData
+    formattedData.append('repo',repo)
+    const response = await fetch('./myWamp/php/getLocalRepoStatus.php', {
+        method: 'POST',
+        body: formattedData
+    }).then(response => response.text())
+    let decodedData = JSON.parse(response)
+
+    htmlElement.parentElement.nextElementSibling.innerHTML += `<p title="number of changes in your project may be commit" class="font-bold mr-2"><i class="fa-solid mr-1 cursor-pointer text-blue-400 fa-angles-up"></i>${decodedData.commitsToDo}</p>`
+}
 
 // document.querySelector('#container').scrollTop = 520;
 
+window.addEventListener('load', ()=>{
+    document.querySelectorAll('.nameProjet').forEach( project =>{
 
+        let buttonDivNb = project.parentElement.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.lastElementChild.childElementCount
+        if( buttonDivNb === 3 ){
+            getRepoLocalStatus(project.textContent.trim(),project).then(function(){
+                getCommitBehindOrigin(project.textContent.trim(),project)
+
+            })
+        }
+    })
+})
 
 async function openGitInfo(){
+
+    if(!document.querySelector('#modalInfos').classList.contains('hidden')){
+        document.querySelector('#modalInfos').classList.add('hidden')
+    }
 
     if ( document.querySelector('#modalGit').classList.contains('hidden')){
 
@@ -14,8 +57,8 @@ async function openGitInfo(){
             .then(response => response.text())
         let infosDecoded = JSON.parse(response)
 
-        document.querySelector('#publicRepo').innerHTML = "Publics repos : "+ infosDecoded.public_repos
-        document.querySelector('#privateRepo').innerHTML = "Privates repos : "+ infosDecoded.total_private_repos
+        document.querySelector('#publicRepo').innerHTML = "<span class='font-bold'>Publics repos : </span>"+ infosDecoded.public_repos
+        document.querySelector('#privateRepo').innerHTML = "<span class='font-bold'>Privates repos : </span>"+ infosDecoded.total_private_repos
         document.querySelector('#avatarGit').src = infosDecoded.avatar_url
 
     }
@@ -32,14 +75,24 @@ let triProjet = (value) =>{
 
     document.querySelectorAll('.nameProjet').forEach(projet =>{
         if ( !projet.textContent.toLowerCase().includes(value.toLowerCase()) ){
-            projet.parentElement.parentElement.classList.add('hidden')
+            projet.parentElement.parentElement.parentElement.classList.add('hidden')
         }else{
-            projet.parentElement.parentElement.classList.remove('hidden')
+            projet.parentElement.parentElement.parentElement.classList.remove('hidden')
         }
     })
 }
 document.querySelector('#search').addEventListener('keyup',(e)=>{
     triProjet(e.target.value)
+
+})
+document.querySelector('#searchExtension').addEventListener('keyup',(e)=>{
+    document.querySelectorAll('.liExt').forEach(element => {
+        if( !element.textContent.toLowerCase().includes(e.target.value) ){
+            element.classList.add('hidden')
+        }else{
+            element.classList.remove('hidden')
+        }
+    })
 
 })
 
@@ -172,6 +225,8 @@ let goNormal = () => {
     document.querySelectorAll('.themeBG').forEach(element =>{
         element.classList.remove('bg-slate-800')
     })
+
+
     document.querySelectorAll('.themeTEXT').forEach(element =>{
         element.classList.remove('text-white')
         element.classList.add('text-gray-700')
@@ -229,8 +284,6 @@ let createProject = (git) => {
             }).then(response =>response.text())
             let resDecoded = JSON.parse(response)
 
-            console.log(typeof Object.keys(resDecoded)[0] )
-            console.log(Object.keys(resDecoded)[0].toString() === 'error')
                 if ( Object.keys(resDecoded)[0].toString() === 'error'){
                     Swal.fire({
                         icon:'error',
@@ -257,12 +310,8 @@ let createProject = (git) => {
                         window.location.reload(true);
                         return false;
                     })
-
                 }
-
             return true
-
-
         },
         allowOutsideClick: false
     })
@@ -292,4 +341,30 @@ if( config.theme === 'dark'){
 }else{
     goNormal()
     document.querySelector('#default-toggle').removeAttribute('checked')
+}
+
+let openInfo = () => {
+    if(!document.querySelector('#modalGit').classList.contains('hidden')){
+        document.querySelector('#modalGit').classList.add('hidden')
+    }
+    if ( document.querySelector("#modalInfos").classList.contains('hidden') ){
+        document.querySelector("#modalInfos").classList.remove('hidden')
+
+    }else{
+        document.querySelector("#modalInfos").classList.add('hidden')
+
+    }
+}
+
+let openList = (elementClicked) => {
+
+    if( document.querySelector('#ulExt').classList.contains('fa-caret-up') ){
+        document.querySelector('#ulExt').classList.remove('fa-caret-up')
+        document.querySelector('#ulExt').classList.add('fa-caret-down')
+    }else{
+        document.querySelector('#ulExt').classList.remove('fa-caret-down')
+        document.querySelector('#ulExt').classList.add('fa-caret-up')
+    }
+
+    elementClicked.nextElementSibling.classList.toggle('hidden')
 }

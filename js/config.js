@@ -1,3 +1,3 @@
 
 let config = {
-    'theme':'dark'}
+    'theme':'normal'}

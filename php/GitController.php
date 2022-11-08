@@ -1,6 +1,10 @@
 <?php
-
-include_once './myInfos.php';
+if ( file_exists('./myInfos.php') ){
+    include_once './myInfos.php';
+}
+//elseif ( file_exists('../myInfos.php') ){
+//    include_once '../myInfos.php';
+//}
 
 class GitController
 {
@@ -39,7 +43,7 @@ class GitController
     }
 
     public function createRepository( $repositoryName , $description="" , $private = true ){
-// TODO à venir : doit check si le repo exist deja
+
         if($private != false && $private != 'private'){
             $private = 'false';
         }else{
@@ -110,6 +114,119 @@ class GitController
         $userGitInfo['total_private_repos'] = $decodedData->total_private_repos;
 
         return $userGitInfo;
+    }
+
+    public function getLocalRepoStatus($repo){
+        chdir("C:/wamp64/www/$repo")  ;
+        $result=exec("git status",$r2);
+
+//        echo "<pre>";
+
+//        foreach($r2 as $line)
+//        {
+////            echo $line."\n";
+//            nicePrint(trim($line));
+//        }
+
+        unset($r2);
+
+//        echo "\n\n";
+//        echo "------------------------------------------------------";
+//        echo "\ngit status\n";
+//        echo "------------------------------------------------------";
+//        echo "\n\n";
+        $result = exec("git config --global --add safe.directory C:/wamp64/www/$repo",$r2);
+        $result=exec("git status 2>&1",$r2);
+
+//        echo "<pre>";
+        $statusArray = array();
+
+        foreach($r2 as $line)
+        {
+
+            if ( strpos($line,':')){
+                $explodedString = explode(':',$line);
+
+                if(strlen($explodedString[1]) != 0 ){
+
+                    $statusArray[trim($explodedString[0])][] = $explodedString[1];
+
+                }
+            }else{
+                if(strlen($line) != 0 ){
+                    $statusArray[] = $line;
+
+                }
+
+            }
+
+        }
+
+        if ( isset($statusArray['new file']) ){
+            $statusArray['toCommit'] = count($statusArray['new file']);
+        }
+
+        return $statusArray;
+    }
+
+    public function getBehindStatusFromOrigin($repo)
+    {
+        $resultArray = array();
+        $resultArray['ahead'] = 0 ;
+        $resultArray['behind'] = 0 ;
+        chdir("C:/wamp64/www/$repo");
+//        $result=exec("git fetch",$r2);
+        $result=exec("git status -sb",$r2);
+        $behindCount='0';
+
+        if ( !empty($r2) ){
+
+            foreach($r2 as $line)
+            {
+
+                if(strpos($line,'behind') > 0 )
+                {
+
+                    $behindCount=explode('[',$line);
+                    $behindCount=trim(str_replace('behind ','',$behindCount[1]));
+                    $behindCount=trim(str_replace(']','',$behindCount));
+
+                }
+                $resultArray["behind"] = $behindCount;
+
+                if( strpos($line,'ahead')  >   0){
+
+                    if(strpos($line,',') > 0 ){
+                        $ahead = explode(',',$behindCount);
+                        $behind = trim(str_replace(', ','',$ahead[1]));
+                        $ahead = trim(str_replace('ahead ','',$ahead[0]));
+                        $resultArray["ahead"] = $ahead;
+                        $resultArray["behind"] = $behind;
+                    }else{
+                        $behindCount=explode('[',$line);
+                        $behindCount=trim(str_replace('ahead ','',$behindCount[1]));
+                        $behindCount=trim(str_replace(']','',$behindCount));
+                        $ahead = explode(',',$behindCount);
+                        $ahead = trim(str_replace('ahead ','',$ahead[0]));
+                        $resultArray["ahead"] = $ahead;
+
+                    }
+
+                }else{
+                    $resultArray["ahead"] = 0;
+                }
+
+                return $resultArray;
+            }
+        }else{
+            return $resultArray;
+        }
+
+
+
+
+        unset($r2);
+        return $resultArray;
     }
 
 
