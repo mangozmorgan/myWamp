@@ -1,13 +1,15 @@
-# MyWamp 1.2
+# MyWamp 1.3
 Simple custom interface for Wamp
 ## How to install ?
 - Find your **www** directory , where your is your localhost , for example mine is C:\wamp64\www
-- Cloning the repository myWamp from github ( "https://github.com/mangozmorgan/myWamp.git" ) here 
+- Cloning the repository **myWamp** from github ( "https://github.com/mangozmorgan/myWamp.git" ) here 
 - Find the **index.php** file in **www** and rename it to **indexBase.php**
 - Open **myWamp** directory and cut **index.php** paste it to **www**
+- Use **Composer** to install dependencies with **composer install** 
 ## How configure ? 
-- Go to **myWamp/php/myInfos.php**
-- Fill all the constants with **yours** personnals values (there are little documentation in this file)
+- Create a **.env** file at the **root** of the project like this example with your own datas
+
+ ![Screenshot](assets/env.png)
 
 ## Git features
 - You can create a project directly from myWamp, the Github repository will be created and cloned in to your **www** directory
@@ -18,7 +20,7 @@ Simple custom interface for Wamp
   - Number of commits behind from origin
 - more soon ...
 ## Enjoy
-Work in progress... .. .
+Work in progress... .. . 👽
 
 ## Screenshots
 

@@ -1,1 +1,0 @@
-MyWamp, custom interface for Wamp
