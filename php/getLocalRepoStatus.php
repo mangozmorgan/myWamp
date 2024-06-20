@@ -5,11 +5,18 @@ $git = new GitController();
 $repoStatusArray = array();
 
 $res = $git->getLocalRepoStatus($_POST['repo']);
+if( $_POST['repo'] === 'phpTrainer'){
+    // var_dump($res);die();
 
+}
 $commitToDo = 0;
 
 if ( isset($res["new file"]) )  {
     $commitToDo = count($res["new file"]);
+}
+
+if ( isset($res["modified"]) )  {
+    $commitToDo += count($res["modified"]);
 }
 $repoStatusArray['commitsToDo'] = $commitToDo;
 

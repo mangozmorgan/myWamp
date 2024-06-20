@@ -29,4 +29,4 @@ $myfile = fopen('C:/wamp64/www/'.$_POST['directoryName'].'/readme.txt', "w") or 
 
 $res = fwrite($myfile, $_POST['description']);
 fclose($myfile);
-var_dump($res);
+// var_dump($res);

@@ -22,4 +22,4 @@ $output = null ;
 //$repoCreated = $git->createRepository('MonRepoO0','test repos via php');
 // $git->removeRepository("go_go_go_");
 $diffWithOrigin = $git->getBehindStatusFromOrigin("sunday_test");
-nicePrint($diffWithOrigin);
+// nicePrint($diffWithOrigin);

@@ -10,7 +10,7 @@ async function  getCommitBehindOrigin(repo,htmlElement){
     }).then(response => response.text())
     let decodedData = JSON.parse(response)
 
-    htmlElement.parentElement.nextElementSibling.innerHTML += `<p title="Number commits may be commit" class="font-bold mr-2" ><i class="fa-solid mr-1 text-green-400  cursor-pointer fa-arrow-up "></i>${decodedData.ahead}</p>`
+    htmlElement.parentElement.nextElementSibling.innerHTML += `<p title="Number commits may be push" class="font-bold mr-2" ><i class="fa-solid mr-1 text-green-400  cursor-pointer fa-arrow-up "></i>${decodedData.ahead}</p>`
     htmlElement.parentElement.nextElementSibling.innerHTML += `<p title="Your difference with online repository" class="font-bold mr-2 col-end-7" ><i class="fa-solid cursor-pointer mr-1 text-red-400 fa-arrow-down"></i>${decodedData.behind}</p>`
 }
 
