@@ -1,5 +1,7 @@
 # MyWamp 1.3
 Simple custom interface for Wamp
+## What is needed ?
+- **PHP 7** ( is not compatible with PHP 8 yet )
 ## How to install ?
 - Find your **www** directory , where your is your localhost , for example mine is C:\wamp64\www
 - Cloning the repository **myWamp** from github ( "https://github.com/mangozmorgan/myWamp.git" ) here 
